@@ -1,13 +1,19 @@
-// src/components/dashboard/Dashboard.jsx
-import { Card, CardContent, CardHeader, CardTitle } from "/src/components/ui/card";
-import { Badge } from "/src/components/ui/badge";
+import { PageContainer } from "/src/components/layout/PageContainer";
+import { PageHeader } from "/src/components/ui/page-header";
+import { StatsGrid } from "/src/components/layout/StatsGrid";
+import { ContentGrid } from "/src/components/layout/ContentGrid";
+import { StatCard } from "/src/components/ui/stat-card";
+import { DataList } from "/src/components/ui/data-list";
+import { QuickActions } from "/src/components/ui/quick-actions";
+import { StatusBadge } from "/src/components/ui/status-badge";
 import {
     MessageSquare,
     Calendar,
     Users,
     Car,
-    TrendingUp,
-    Clock
+    Clock,
+    Plus,
+    UserPlus
 } from "lucide-react";
 
 export function Dashboard() {
@@ -17,28 +23,29 @@ export function Dashboard() {
             value: "24",
             change: "+3 today",
             icon: MessageSquare,
-            color: "text-blue-600"
+            iconColor: "text-blue-600"
         },
         {
             title: "Active Bookings",
             value: "12",
             change: "+2 this week",
             icon: Calendar,
-            color: "text-green-600"
+            iconColor: "text-green-600"
         },
         {
             title: "Total Customers",
             value: "89",
             change: "+5 this month",
             icon: Users,
-            color: "text-purple-600"
+            iconColor: "text-purple-600"
         },
         {
             title: "Available Vehicles",
             value: "8",
             change: "2 on trip",
+            changeType: "neutral",
             icon: Car,
-            color: "text-orange-600"
+            iconColor: "text-orange-600"
         }
     ];
 
@@ -69,108 +76,81 @@ export function Dashboard() {
         }
     ];
 
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'pending': return 'bg-yellow-100 text-yellow-800';
-            case 'converted': return 'bg-green-100 text-green-800';
-            case 'cancelled': return 'bg-red-100 text-red-800';
-            default: return 'bg-gray-100 text-gray-800';
+    const quickActions = [
+        {
+            title: "New Enquiry",
+            description: "Create a new customer enquiry",
+            icon: MessageSquare,
+            onClick: () => console.log("New Enquiry")
+        },
+        {
+            title: "New Booking",
+            description: "Create a direct booking",
+            icon: Calendar,
+            onClick: () => console.log("New Booking")
+        },
+        {
+            title: "Add Vehicle",
+            description: "Register a new vehicle",
+            icon: Car,
+            onClick: () => console.log("Add Vehicle")
+        },
+        {
+            title: "Add Driver",
+            description: "Register a new driver",
+            icon: UserPlus,
+            onClick: () => console.log("Add Driver")
         }
-    };
+    ];
 
-    return (
-        <div className="space-y-6">
-            {/* Page Header */}
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-gray-600 mt-1">Welcome back! Here's what's happening with your business.</p>
+    const renderEnquiryItem = (enquiry) => (
+        <div className="flex items-center justify-between">
+            <div className="space-y-1">
+                <p className="font-medium text-sm">{enquiry.customer}</p>
+                <p className="text-xs text-gray-600">{enquiry.phone}</p>
+                <p className="text-xs text-gray-500">{enquiry.trip}</p>
             </div>
-
-            {/* Stats Grid */}
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {stats.map((stat) => {
-                    const Icon = stat.icon;
-                    return (
-                        <Card key={stat.title}>
-                            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium text-gray-600">
-                                    {stat.title}
-                                </CardTitle>
-                                <Icon className={`h-4 w-4 ${stat.color}`} />
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-2xl font-bold">{stat.value}</div>
-                                <p className="text-xs text-gray-600 flex items-center mt-1">
-                                    <TrendingUp className="h-3 w-3 mr-1" />
-                                    {stat.change}
-                                </p>
-                            </CardContent>
-                        </Card>
-                    );
-                })}
-            </div>
-
-            {/* Recent Activity */}
-            <div className="grid gap-6 md:grid-cols-2">
-                {/* Recent Enquiries */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center">
-                            <MessageSquare className="h-5 w-5 mr-2" />
-                            Recent Enquiries
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {recentEnquiries.map((enquiry) => (
-                                <div key={enquiry.id} className="flex items-center justify-between p-3 border rounded-lg">
-                                    <div className="space-y-1">
-                                        <p className="font-medium text-sm">{enquiry.customer}</p>
-                                        <p className="text-xs text-gray-600">{enquiry.phone}</p>
-                                        <p className="text-xs text-gray-500">{enquiry.trip}</p>
-                                    </div>
-                                    <div className="text-right space-y-2">
-                                        <Badge className={getStatusColor(enquiry.status)}>
-                                            {enquiry.status}
-                                        </Badge>
-                                        <p className="text-xs text-gray-500 flex items-center">
-                                            <Clock className="h-3 w-3 mr-1" />
-                                            {enquiry.date}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-
-                {/* Quick Actions */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Quick Actions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-2">
-                            <button className="w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                                <div className="font-medium text-sm">New Enquiry</div>
-                                <div className="text-xs text-gray-600">Create a new customer enquiry</div>
-                            </button>
-                            <button className="w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                                <div className="font-medium text-sm">New Booking</div>
-                                <div className="text-xs text-gray-600">Create a direct booking</div>
-                            </button>
-                            <button className="w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                                <div className="font-medium text-sm">Add Vehicle</div>
-                                <div className="text-xs text-gray-600">Register a new vehicle</div>
-                            </button>
-                            <button className="w-full text-left p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                                <div className="font-medium text-sm">Add Driver</div>
-                                <div className="text-xs text-gray-600">Register a new driver</div>
-                            </button>
-                        </div>
-                    </CardContent>
-                </Card>
+            <div className="text-right space-y-2">
+                <StatusBadge status={enquiry.status} />
+                <p className="text-xs text-gray-500 flex items-center justify-end">
+                    <Clock className="h-3 w-3 mr-1" />
+                    {enquiry.date}
+                </p>
             </div>
         </div>
+    );
+
+    return (
+        <PageContainer>
+            <PageHeader
+                title="Dashboard"
+                subtitle="Welcome back! Here's what's happening with your business."
+            />
+
+            <StatsGrid cols={4}>
+                {stats.map((stat) => (
+                    <StatCard
+                        key={stat.title}
+                        title={stat.title}
+                        value={stat.value}
+                        change={stat.change}
+                        changeType={stat.changeType}
+                        icon={stat.icon}
+                        iconColor={stat.iconColor}
+                    />
+                ))}
+            </StatsGrid>
+
+            <ContentGrid>
+                <DataList
+                    title="Recent Enquiries"
+                    items={recentEnquiries}
+                    renderItem={renderEnquiryItem}
+                    emptyMessage="No recent enquiries"
+                />
+
+                <QuickActions actions={quickActions} />
+            </ContentGrid>
+        </PageContainer>
     );
 }
