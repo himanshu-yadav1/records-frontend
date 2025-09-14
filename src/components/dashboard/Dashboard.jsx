@@ -1,11 +1,11 @@
-import { PageContainer } from "/src/components/layout/PageContainer";
-import { PageHeader } from "/src/components/ui/page-header";
-import { StatsGrid } from "/src/components/layout/StatsGrid";
-import { ContentGrid } from "/src/components/layout/ContentGrid";
-import { StatCard } from "/src/components/ui/stat-card";
-import { DataList } from "/src/components/ui/data-list";
-import { QuickActions } from "/src/components/ui/quick-actions";
-import { StatusBadge } from "/src/components/ui/status-badge";
+import { PageContainer } from "../layout/PageContainer";
+import { PageHeader } from "../ui/page-header";
+import { StatsGrid } from "../layout/StatsGrid";
+import { ContentGrid } from "../layout/ContentGrid";
+import { StatCard } from "../ui/stat-card";
+import { DataList } from "../ui/data-list";
+import { QuickActions } from "../ui/quick-actions";
+import { StatusBadge } from "../ui/status-badge";
 import {
     MessageSquare,
     Calendar,
@@ -15,8 +15,12 @@ import {
     Plus,
     UserPlus
 } from "lucide-react";
+import { useState } from "react";
+import NewEnquiryModal from "../popups/NewEnquiryModal";
 
 export function Dashboard() {
+    const [showNewEnquiryModal, setShowNewEnquiryModal] = useState(false);
+
     const stats = [
         {
             title: "Total Enquiries",
@@ -81,7 +85,7 @@ export function Dashboard() {
             title: "New Enquiry",
             description: "Create a new customer enquiry",
             icon: MessageSquare,
-            onClick: () => console.log("New Enquiry")
+            onClick: () => setShowNewEnquiryModal(true)
         },
         {
             title: "New Booking",
@@ -122,6 +126,11 @@ export function Dashboard() {
 
     return (
         <PageContainer>
+            <NewEnquiryModal
+                isOpen={showNewEnquiryModal}
+                onClose={() => setShowNewEnquiryModal(false)}
+            />
+
             <PageHeader
                 title="Dashboard"
                 subtitle="Welcome back! Here's what's happening with your business."
